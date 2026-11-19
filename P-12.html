@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>HealthNest - Endpoint Data Management</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f8f7;
+            margin: 0;
+            text-align: center;
+        }
+
+        header {
+            background-color: #087f78;
+            color: white;
+            padding: 25px;
+        }
+
+        nav {
+            background-color: #064e49;
+            padding: 15px;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 15px;
+        }
+
+        .container {
+            background-color: white;
+            width: 85%;
+            max-width: 450px;
+            margin: 30px auto;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ccc;
+        }
+
+        h2 {
+            color: #087f78;
+        }
+
+        input {
+            width: 85%;
+            padding: 12px;
+            margin: 10px;
+            border: 1px solid #aaa;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #087f78;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #064e49;
+        }
+
+        #result {
+            margin-top: 20px;
+            color: #087f78;
+            line-height: 1.8;
+        }
+
+        footer {
+            background-color: #064e49;
+            color: white;
+            padding: 15px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>HealthNest</h1>
+        <p>Preventive Healthcare and Diagnostics</p>
+    </header>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#data">Patient Data</a>
+        <a href="#contact">Contact</a>
+    </nav>
+
+    <!-- Home Section -->
+    <div class="container" id="home">
+        <h2>Welcome to HealthNest</h2>
+
+        <p>
+            Manage healthcare information easily
+            with our endpoint data management system.
+        </p>
+    </div>
+
+    <!-- API Data Section -->
+    <div class="container" id="data">
+
+        <h2>Patient Data Management</h2>
+
+        <p>Enter User ID (1 to 10) to retrieve sample data.</p>
+
+        <input type="number" id="userId" placeholder="Enter User ID" min="1" max="10">
+
+        <br><br>
+
+        <button onclick="getData()">
+            Get Patient Data
+        </button>
+
+        <div id="result">
+            Data will appear here.
+        </div>
+
+    </div>
+
+    <footer id="contact">
+        <p>&copy; 2026 HealthNest. All Rights Reserved.</p>
+        <p>healthnest@gmail.com</p>
+    </footer>
+
+    <script>
+
+        // JavaScript Function 
+        async function getData() {
+
+            let id = document.getElementById("userId").value;
+            let result = document.getElementById("result");
+
+            // Input Validation 
+            if (id === "") {
+                result.innerHTML =
+                    "Please enter a User ID.";
+                return;
+            }
+
+            if (!Number.isInteger(Number(id)) ||
+                Number(id) < 1 || Number(id) > 10) {
+
+                result.innerHTML =
+                    "Enter a valid User ID between 1 and 10.";
+                return;
+            }
+
+            result.innerHTML = "Loading data...";
+
+            try {
+
+                // API Call using Fetch 
+                console.log("Fetching data for User ID:", id);
+
+                let response = await fetch(
+                    "https://jsonplaceholder.typicode.com/users/" + id
+                );
+
+                // Check API Response 
+                if (!response.ok) {
+                    throw new Error("Failed to fetch data.");
+                }
+
+                let data = await response.json();
+
+                // Display API Data 
+                result.innerHTML =
+                    "<h3>User Details</h3>" +
+                    "<b>Name:</b> " + data.name + "<br>" +
+                    "<b>Email:</b> " + data.email + "<br>" +
+                    "<b>Phone:</b> " + data.phone + "<br>" +
+                    "<b>City:</b> " + data.address.city;
+
+                // Debugging 
+                console.log("API Data:", data);
+
+            }
+
+            catch (error) {
+
+                // Error Handling 
+                result.innerHTML =
+                    "Unable to retrieve data. Please try again.";
+
+                console.error("Error:", error);
+
+            }
+        } 
+    </script>
+</body>
+
+</html>
